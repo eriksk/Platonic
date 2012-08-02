@@ -12,6 +12,11 @@ module Platonic
 	        @scale = 1.0
 		end
 
+		def set_position(x, y)
+			@position.x = x
+			@position.y = y
+		end
+
 		def intersect? other
 	        if @position.x > other.position.x + (other.width / 2.0)
                 return false
@@ -36,7 +41,7 @@ module Platonic
 
 		def draw
 	        before_draw
-	        @texture.draw_rot(@position.x, @position.y, 0.0, @rotation.to_degrees, @origin.x, @origin.y, @scale, @scale)
+	        @texture.draw_rot(@position.x.to_i, @position.y.to_i, 0.0, @rotation.to_degrees, @origin.x, @origin.y, @scale, @scale)
 	        after_draw
 		end
 
