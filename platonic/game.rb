@@ -11,8 +11,12 @@ module Platonic
 			@color_red = Color::RED
 			@color_red.alpha = 100
 
-			@player = Player.new(self, load_image_tiles('character', 16, 16))
-			@player.set_position($WIDTH / 2.0, $HEIGHT / 2.0)
+			@players = [
+				Player.new(self, load_image_tiles('character_boy', 16, 16)),
+				Player.new(self, load_image_tiles('character_girl', 16, 16))
+			]	
+			@players[0].set_position($WIDTH / 2.0, $HEIGHT / 2.0)
+			@players[1].set_position(($WIDTH / 2.0) + 200, $HEIGHT / 2.0)
 		
 			@map = TmxTileMap.new
 			@map.load('content/maps/map1.json', self)
@@ -36,22 +40,24 @@ module Platonic
 		def update
 			dt = 16.0
 
-			@player.update dt
-
-			col = (@player.position.x / 16).to_i
-			row = (@player.position.y / 16).to_i
-			if @map.layers.first.get_cell(col, row) > 0
-				x = col * 16
-				y = row * 16
-				if @player.position.x < x + 8
-					@player.position.x = x
-					# TODO: clear velocity.x
-				else
-					@player.position.x = x + 16
-				end
-				if @player.position.y + 8 > y
-					# @player.position.y = y - 8
-					# TODO: land player if in air? only check for floor if in air... u know
+			@players.each do |player|
+				player.update dt
+				
+				col = (player.position.x / 16).to_i
+				row = (player.position.y / 16).to_i
+				if @map.layers.first.get_cell(col, row) > 0
+					x = col * 16
+					y = row * 16
+					if player.position.x < x + 8
+						player.position.x = x
+						# TODO: clear velocity.x
+					else
+						player.position.x = x + 16
+					end
+					if player.position.y + 8 > y
+						# @player.position.y = y - 8
+						# TODO: land player if in air? only check for floor if in air... u know
+					end
 				end
 			end
 		end
@@ -65,19 +71,22 @@ module Platonic
 			)
 
 			@map.draw
-			@player.draw
 
-			col = (@player.position.x / 16).to_i
-			row = (@player.position.y / 16).to_i
-			if @map.layers.first.get_cell(col, row) > 0
-				x = col * 16
-				y = row * 16
-				draw_quad(
-					x, y, @color_red,
-					x + 16, y, @color_red,
-					x + 16, y + 16, @color_red,
-					x, y + 16, @color_red
-				)
+			@players.each do |player|
+				player.draw
+
+				col = (player.position.x / 16).to_i
+				row = (player.position.y / 16).to_i
+				if @map.layers.first.get_cell(col, row) > 0
+					x = col * 16
+					y = row * 16
+					draw_quad(
+						x, y, @color_red,
+						x + 16, y, @color_red,
+						x + 16, y + 16, @color_red,
+						x, y + 16, @color_red
+					)
+				end
 			end
 		end
 	end
