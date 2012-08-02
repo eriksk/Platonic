@@ -6,10 +6,14 @@ module Platonic
 			super $WIDTH, $HEIGHT, $FULLSCREEN
 			self.caption = "Platonic"
 
-			@background_color = Color::WHITE
+			@top_color = Color::WHITE
+			@bottom_color = Color::GRAY
 
 			@player = Player.new(self, load_image_tiles('character', 16, 16))
 			@player.set_position($WIDTH / 2.0, $HEIGHT / 2.0)
+		
+			@map = TmxTileMap.new
+			@map.load('content/maps/map1.json', self)
 		end
 
 		def button_down(id)
@@ -35,11 +39,12 @@ module Platonic
 
 		def draw
 			draw_quad(
-				0, 0, @background_color,
-				$WIDTH, 0, @background_color,
-				$WIDTH, $HEIGHT, @background_color,
-				0, $HEIGHT, @background_color
+				0, 0, @top_color,
+				$WIDTH, 0, @top_color,
+				$WIDTH, $HEIGHT, @bottom_color,
+				0, $HEIGHT, @bottom_color
 			)
+			@map.draw
 			@player.draw
 		end
 	end

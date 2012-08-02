@@ -17,7 +17,8 @@ module Platonic
 			
 			@gravity = 0.001
 			@speed = 0.001
-			@jump_speed = 0.5
+			@friction = 0.9
+			@jump_speed = 0.3
 			@floor = 500
 		end
 
@@ -30,7 +31,7 @@ module Platonic
 
 		def update dt
 
-			@velocity.x *= 0.9
+			@velocity.x *= @friction
 			@position.x += @velocity.x * dt
 			@position.y += @velocity.y * dt
 
