@@ -31,7 +31,17 @@ module Platonic
 		def get_cell col, row
 			#puts "Getting cell w col:#{col} and row: #{row} and it has the value #{@data[col + row * @width]}"
 			#puts @data
-			@data[col + row * @width]
+			if col + row * @width < @data.size
+				@data[col + row * @width]
+			else
+				return 0
+			end
+		end
+
+		def check_collision position
+			col = (position.x / 16).to_i
+			row = (position.y / 16).to_i
+			return get_cell(col, row) > 0
 		end
 
 		def to_s

@@ -19,7 +19,7 @@ module Platonic
 			@speed = 0.001
 			@friction = 0.9
 			@jump_speed = 0.3
-			@floor = 500
+			@floor = 600
 		end
 
 		def set_anim(anim)
@@ -29,11 +29,52 @@ module Platonic
 			end
 		end
 
-		def update dt
+		def do_collision_x collision_layer
+			if collision_layer.check_collision(Vec2.new(@position.x - 8, @position.y))
+				@position.x = ((@position.x / 16.0).to_i * 16) + 8
+				@velocity.x = 0.0
+			elsif collision_layer.check_collision(Vec2.new(@position.x + 8, @position.y))
+				@position.x = ((@position.x / 16.0).to_i * 16) + 8
+				@velocity.x = 0.0
+			end
+		end
+
+		def do_collision_y collision_layer
+			if !@grounded
+				if @velocity.y > 0.0
+					if collision_layer.check_collision(Vec2.new(@position.x, @position.y + 8))
+					@position.y = ((@position.y / 16.0).to_i * 16) + 8
+					land()
+					end
+				elsif collision_layer.check_collision(Vec2.new(@position.x, @position.y - 8))
+					@position.y = ((@position.y / 16.0).to_i * 16) + 8
+					@velocity.y = 0.0
+				end
+			else
+				# check for floor
+				if !collision_layer.check_collision(Vec2.new(@position.x, @position.y + 9))
+					fall_off()
+				end
+			end
+		end
+
+		def land()
+			@grounded = true
+			@velocity.y = 0.0
+		end
+
+		def fall_off
+			@grounded = false
+			@velocity.y = 0.0
+		end
+
+		def update dt, collision_layer
 
 			@velocity.x *= @friction
 			@position.x += @velocity.x * dt
+			do_collision_x(collision_layer)
 			@position.y += @velocity.y * dt
+			do_collision_y(collision_layer)
 
 			if @grounded
 				if @game.button_down?(Gosu::KbUp)
@@ -62,8 +103,7 @@ module Platonic
 				@velocity.y += @gravity * dt
 				if @position.y >= @floor
 					@position.y = @floor
-					@grounded = true
-					@velocity.y = 0.0
+					land()
 				end
 			end
 			@animations[@current_animation].update dt
