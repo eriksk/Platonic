@@ -3,10 +3,11 @@ require 'json'
 module Platonic
 	class TmxTileMap
 
-		attr_accessor :layers, :width, :height, :tile_width, :tile_height, :properties, :orientation, :texture
+		attr_accessor :layers, :width, :height, :tile_width, :tile_height, :properties, :orientation, :texture, :object_layers
 
 		def initialize
 			@layers = []
+			@object_layers = []
 			@properties = {}
 			@tilesets = []
 		end
@@ -61,7 +62,11 @@ module Platonic
 				@tile_height = hash['tileheight']
 				@orientation = hash['orientation']
 				hash['layers'].each do |layer|
-					@layers.push TmxLayer.new layer
+					if layer['type'] == 'tilelayer'
+						@layers.push TmxLayer.new layer
+					elsif layer['type'] == 'objectgroup'
+						@object_layers.push TmxObjectLayer.new(layer)
+					end
 				end
 				hash['properties'].each do |property|
 					@properties[property['key']] = property['value']

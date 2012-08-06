@@ -22,6 +22,12 @@ module Platonic
 			@floor = 600
 		end
 
+		def reset
+			@velocity.x = 0.0
+			@velocity.y = 0.0
+			fall_off()
+		end
+
 		def set_anim(anim)
 			if @current_animation != anim
 				@current_animation = anim

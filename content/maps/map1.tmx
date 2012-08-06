@@ -5,7 +5,11 @@
  </tileset>
  <layer name="Tile Layer 1" width="50" height="37">
   <data encoding="base64" compression="zlib">
-   eJztllEOwCAIQ83m/c+87AQbWKBiX8LfEvsEF+YYYzap3ZEHF/LgQh5cyIMLefjP6r6XvDkuZ8kDjzzkEUGEx8p/zvrtDajqfnTxQHGCx993wbAvnNCPnbDMBPPemXFupGf1/a0QOQeZd840z19Ysns8Iv292Vn6gchf6ZmZH+1SlR3pUZ2/mwd7PSAcCAs=
+   eJztltEKwCAIRX3o/795r8EgND3WnBciGHUvZyU2RGQUGZQyMuYc2r85bDm0f3PYcmj/5rDl0P5ZHFQv0nzvPvjOof2bw5ZD+5/ioN+l0bVc/Tyi/atyRGdGcKz2Z/dBqo9Wv1dUDu3fHLacnT3RNeTRnzl2/D2colhzS31YOXb+hUcUxyon4vxX/tp13n57msOjr9wrbQ6lKhxZao67lFEf80zmVBkPg4EHLQ==
   </data>
  </layer>
+ <objectgroup name="spawn_points" width="50" height="37">
+  <object name="p1" x="53" y="122" width="24" height="17"/>
+  <object name="p2" x="736" y="120" width="23" height="15"/>
+ </objectgroup>
 </map>

@@ -10,6 +10,10 @@ module Platonic
 	        @origin = Vec2.new(0.5, 0.5)
 	        @rotation = 0.0
 	        @scale = 1.0
+	        load()
+		end
+
+		def load
 		end
 
 		def set_position(x, y)

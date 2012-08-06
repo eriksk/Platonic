@@ -1,6 +1,10 @@
 module Platonic
 	class Game < Gosu::Window
 		include Gosu
+
+		STATES = [:playing, :game_over]
+
+		@state = :playing
 		
 		def initialize
 			super $WIDTH, $HEIGHT, $FULLSCREEN
@@ -20,12 +24,29 @@ module Platonic
 		
 			@map = TmxTileMap.new
 			@map.load('content/maps/map1.json', self)
+
+			@particle_manager = ParticleManager.new(self)
+			@state = :playing
+		end
+
+		def game_over
+			@state = :game_over
+		end
+
+		def reset
+			@players[0].set_position(@map.object_layers.first.get_object('p1').x, @map.object_layers.first.get_object('p1').y)
+			@players[1].set_position(@map.object_layers.first.get_object('p2').x, @map.object_layers.first.get_object('p2').y)
+			@players[0].reset
+			@players[1].reset
+			@state = :playing
 		end
 
 		def button_down(id)
 			case id
 				when KbEscape
 					exit
+				when KbReturn
+					reset
 			end
 		end
 
@@ -40,20 +61,20 @@ module Platonic
 		def update
 			dt = 16.0
 
-			@players.each do |player|
-				player.update dt, @map.layers.first
+			case @state
+				when :playing
+					@players.each do |player|
+						player.update dt, @map.layers.first
+					end
+
+					if @players[0].intersect?(@players[1])
+						@particle_manager.spawn_hearts(@players[0].position)
+						game_over()
+					end	
+				when :game_over
 			end
-=begin
-			if @players[0].insersect?(@players[1])
-				if @players[0].position.x < @players[1].position.x
-					@players[0].position.x -= 0.05 * dt
-					@players[1].position.x += 0.05 * dt
-				else
-					@players[0].position.x += 0.05 * dt
-					@players[1].position.x -= 0.05 * dt
-				end
-			end
-=end	
+
+			@particle_manager.update dt
 		end
 
 		def draw
@@ -67,6 +88,7 @@ module Platonic
 			@players.each do |player|
 				player.draw
 			end
+			@particle_manager.draw
 		end
 	end
 end
