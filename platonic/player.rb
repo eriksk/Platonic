@@ -30,6 +30,7 @@ module Platonic
 		end
 
 		def do_collision_x collision_layer
+			# TODO: do rectangle collision instead? don't know, or is it good enough?
 			if collision_layer.check_collision(Vec2.new(@position.x - 8, @position.y))
 				@position.x = ((@position.x / 16.0).to_i * 16) + 8
 				@velocity.x = 0.0
